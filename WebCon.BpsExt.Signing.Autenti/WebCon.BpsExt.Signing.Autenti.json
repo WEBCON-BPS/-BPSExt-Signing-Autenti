@@ -1,0 +1,26 @@
+[
+  {
+    "Guid": "f4e30f1a-f210-497e-ac13-1bb35b6df110",
+    "Name": "DownloadDocument",
+    "Description": "The action downloads related signed document.",
+    "Assembly": "WebCon.BpsExt.Signing.Autenti",
+    "Class": "WebCon.BpsExt.Signing.Autenti.CustomActions.Download.DownloadSignDocAction",
+    "Type": "CustomAction"
+  },
+  {
+    "Guid": "48cb6a14-7161-4955-b483-34c93cf99a1d",
+    "Name": "CheckDocumentStatus",
+    "Description": "This action checks the current status of the document sent to be signed.",
+    "Assembly": "WebCon.BpsExt.Signing.Autenti",
+    "Class": "WebCon.BpsExt.Signing.Autenti.CustomActions.Status.CheckDocStatusAction",
+    "Type": "CustomAction"
+  },
+  {
+    "Guid": "3e2d8b50-fdf5-40d4-b468-c4ccacd132c8",
+    "Name": "SendEnvelope",
+    "Description": "Action sends selected documents to be signed in Autenti.",
+    "Assembly": "WebCon.BpsExt.Signing.Autenti",
+    "Class": "WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope.SendEnvelopeAction",
+    "Type": "CustomAction"
+  } 
+]
