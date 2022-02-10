@@ -1,7 +1,8 @@
-﻿using WebCon.WorkFlow.SDK.Common;
+﻿using WebCon.BpsExt.Signing.Autenti.CustomActions.APIv01.Config;
+using WebCon.WorkFlow.SDK.Common;
 using WebCon.WorkFlow.SDK.ConfigAttributes;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope
 {
     public class SendEnvelopeActionConfig : PluginConfiguration
     {
@@ -17,12 +18,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope
         [ConfigGroupBox(DisplayName = "Message content")]
         public MessageContent MessageContent { get; set; }      
     }
-
-    public class ApiConfiguration
-    {
-        [ConfigEditableText(DisplayName = "Integration Key", IsRequired = true)]
-        public string TokenValue { get; set; }
-    }
+    
     public class MessageContent
     {
         [ConfigEditableText(DisplayName = "Subject", IsRequired = true)]

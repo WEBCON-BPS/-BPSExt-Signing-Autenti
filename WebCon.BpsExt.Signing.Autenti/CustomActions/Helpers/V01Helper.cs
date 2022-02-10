@@ -4,34 +4,40 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope;
+using WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope;
+using WebCon.WorkFlow.SDK.ActionPlugins.Model;
 using WebCon.WorkFlow.SDK.Documents.Model.Attachments;
+using WebCon.WorkFlow.SDK.Tools.Data;
+using WebCon.WorkFlow.SDK.Tools.Data.Model;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 {
-    public class AutentiHelper
+    internal class V01Helper
     {
-        const string BaseUrl = "https://api.accept.autenti.net/api/v0.1";
+        const string BaseTestUrl = "https://api.accept.autenti.net/api/v0.1";
+        string _configUrl;
         StringBuilder _log;
-        
-        public AutentiHelper(StringBuilder log)
+       
+
+        public V01Helper(string autentiUrl, StringBuilder log)
         {
             ServicePointManager.SecurityProtocol = ServicePointManager.SecurityProtocol |
                                                    SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             _log = log; ;
+            _configUrl = autentiUrl ?? BaseTestUrl;
         }
 
-        public string SendEnvelope(SendEnvelopeActionConfig config, List<Models.Signer> signers, AttachmentData att)
+        public string SendEnvelope(SendEnvelopeActionConfig config, List<APIv1.Models.Signer> signers, AttachmentData att)
         {
-            var json = new Models.EnvelopeRequest();
+            var json = new APIv1.Models.EnvelopeRequest();
             json.title = config.MessageContent.Title;
             json.message = config.MessageContent.Msg;
-            json.sender = new Models.Sender() { type = config.MessageContent.Type.ToString() };
+            json.sender = new APIv1.Models.Sender() { type = config.MessageContent.Type.ToString() };
             json.signers = signers.ToArray();
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(config.ApiConfig.TokenValue);
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/documents")
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_configUrl}/documents")
             {
                 Content = new StringContent(JsonConvert.SerializeObject(json, Formatting.None,
                             new JsonSerializerSettings
@@ -45,7 +51,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions
             var result = response.Content.ReadAsStringAsync().Result;
             _log.AppendLine("Response: " + result);
 
-            var docId = JsonConvert.DeserializeObject<Models.EnvelopeResponse>(result).documentId;
+            var docId = JsonConvert.DeserializeObject<APIv1.Models.EnvelopeResponse>(result).documentId;
 
             AddDocument(config.ApiConfig.TokenValue, docId, att.Content, att.FileName);
             StartProcess(config.ApiConfig.TokenValue, docId);
@@ -59,7 +65,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions
             client.DefaultRequestHeaders.Add("Accept", "application/pdf, application/json");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}/documents/{docId}/signed");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_configUrl}/documents/{docId}/signed");
 
             var response = client.SendAsync(request).Result;
             response.EnsureSuccessStatusCode();
@@ -78,18 +84,18 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions
 
             multiForm.Add(imageContent, "files", filename);
 
-            var response = client.PostAsync($"{BaseUrl}/documents/{docId}/files", multiForm).Result;
+            var response = client.PostAsync($"{_configUrl}/documents/{docId}/files", multiForm).Result;
             response.EnsureSuccessStatusCode();           
         }
 
         public void StartProcess(string token, string docId)
         {
-            var json = new Models.EnvelopeResponse();
+            var json = new APIv1.Models.EnvelopeResponse();
             json.documentId = docId; 
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/signing-process")
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_configUrl}/signing-process")
             {
                 Content = new StringContent(JsonConvert.SerializeObject(json, Formatting.None,
                             new JsonSerializerSettings
@@ -108,14 +114,14 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}/signing-process/{docId}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_configUrl}/signing-process/{docId}");
 
             var response = client.SendAsync(request).Result;
             response.EnsureSuccessStatusCode();
             var result = response.Content.ReadAsStringAsync().Result;
             _log.AppendLine("Response:").AppendLine(result);
 
-            return JsonConvert.DeserializeObject<Models.StatusResponse>(result).status;
+            return JsonConvert.DeserializeObject<APIv1.Models.StatusResponse>(result).status;
         }       
     }
 }

@@ -1,7 +1,8 @@
-﻿using WebCon.WorkFlow.SDK.Common;
+﻿using WebCon.BpsExt.Signing.Autenti.CustomActions.APIv01.Config;
+using WebCon.WorkFlow.SDK.Common;
 using WebCon.WorkFlow.SDK.ConfigAttributes;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Download
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Download
 {
     public class DownloadSignDocActionConfig : PluginConfiguration
     {
@@ -16,13 +17,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Download
 
         [ConfigGroupBox(DisplayName = "Attachment selection")]
         public AttConfig AttConfig { get; set; }      
-    }
-
-    public class ApiConfiguration
-    {
-        [ConfigEditableText(DisplayName = "Integration Key", IsRequired = true)]
-        public string TokenValue { get; set; }
-    }
+    } 
 
     public class AttConfig
     {
@@ -34,5 +29,5 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Download
 
         [ConfigEditableFormFieldID(DisplayName = "Source attachment ID", Description = "Select the technical field where the source attachment ID was saved.")]
         public int AttTechnicalFieldID { get; set; }
-    }
+    }   
 }

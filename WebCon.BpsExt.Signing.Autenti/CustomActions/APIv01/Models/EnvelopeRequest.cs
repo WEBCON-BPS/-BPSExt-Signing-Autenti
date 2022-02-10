@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Models
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Models
 {
     public class EnvelopeRequest
     {

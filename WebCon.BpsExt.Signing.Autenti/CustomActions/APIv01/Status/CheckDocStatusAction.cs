@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Text;
+using WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers;
 using WebCon.WorkFlow.SDK.ActionPlugins;
 using WebCon.WorkFlow.SDK.ActionPlugins.Model;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Status
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Status
 {
     public class CheckDocStatusAction : CustomAction<CheckDocStatusActionConfig>
     {
@@ -13,7 +14,8 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Status
             try
             {
                 var docId = args.Context.CurrentDocument.GetFieldValue(Configuration.DokFildId)?.ToString();
-                var status = new AutentiHelper(log).GetDocumentStatus(Configuration.ApiConfig.TokenValue, docId);
+                var status = new V01Helper(Configuration.ApiConfig.Url, log)
+                             .GetDocumentStatus(Configuration.ApiConfig.TokenValue, docId);
                
                 args.Context.CurrentDocument.SetFieldValue(Configuration.StatusFildId, status);            
             }

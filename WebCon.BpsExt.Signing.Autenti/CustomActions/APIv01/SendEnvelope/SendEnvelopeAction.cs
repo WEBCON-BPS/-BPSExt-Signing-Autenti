@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers;
 using WebCon.WorkFlow.SDK.ActionPlugins;
 using WebCon.WorkFlow.SDK.ActionPlugins.Model;
 using WebCon.WorkFlow.SDK.Documents;
 using WebCon.WorkFlow.SDK.Documents.Model.Attachments;
-using WebCon.WorkFlow.SDK.Documents.Model.ItemsLists;
+using WebCon.WorkFlow.SDK.Documents.Model.ItemLists;
 using WebCon.WorkFlow.SDK.Tools.Data;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope
 {
     public class SendEnvelopeAction : CustomAction<SendEnvelopeActionConfig>
     {
@@ -22,7 +23,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope
             {
                 var att = GetAttachment(args.Context);
                 var users = PrepareUsersToSign(args.Context.CurrentDocument.ItemsLists.GetByID(Configuration.Users.SignersList.ItemListId));
-                var api = new AutentiHelper(_log);
+                var api = new V01Helper(Configuration.ApiConfig.Url, _log);
                 var docId = api.SendEnvelope(Configuration, users, att);
                 
                 args.Context.CurrentDocument.SetFieldValue(Configuration.AttConfig.DokumentIdFild, docId);
@@ -47,7 +48,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope
             {
                 _log.AppendLine("Downloading attachments by category");
 
-                var allAttachments = DocumentAttachmentsManager.GetAttachments(new GetAttachmentsParams()
+                var allAttachments = new DocumentAttachmentsManager(context).GetAttachments(new GetAttachmentsParams()
                 {
                     DocumentId = context.CurrentDocument.ID,
                     IncludeContent = true
@@ -78,7 +79,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.SendEnvelope
                 if (attId == null)
                     throw new Exception("Sql query not returning result");
 
-                return DocumentAttachmentsManager.GetAttachment(Convert.ToInt32(attId));
+                return new DocumentAttachmentsManager(context).GetAttachment(Convert.ToInt32(attId));
             }
         }
 

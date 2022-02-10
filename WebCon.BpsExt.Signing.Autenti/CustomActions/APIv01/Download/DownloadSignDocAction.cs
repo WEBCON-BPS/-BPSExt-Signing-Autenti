@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers;
 using WebCon.WorkFlow.SDK.ActionPlugins;
 using WebCon.WorkFlow.SDK.ActionPlugins.Model;
 using WebCon.WorkFlow.SDK.Documents;
-using WebCon.WorkFlow.SDK.Documents.Model;
 using WebCon.WorkFlow.SDK.Documents.Model.Attachments;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Download
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Download
 {
     public class DownloadSignDocAction : CustomAction<DownloadSignDocActionConfig>
     {
@@ -21,9 +21,9 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Download
                 if (!string.IsNullOrEmpty(status) && status.Equals(SuccessStatus, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var docId = args.Context.CurrentDocument.GetFieldValue(Configuration.DokFildId)?.ToString();
-                    var api = new AutentiHelper(log);
+                    var api = new V01Helper(Configuration.ApiConfig.Url, log);
                     var responseContent = api.GetDocument(Configuration.ApiConfig.TokenValue, docId);
-                    SaveAtt(args.Context.CurrentDocument, responseContent);
+                    SaveAtt(args.Context, responseContent);
                 }
                 else
                 {
@@ -44,8 +44,9 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Download
             }
         }
 
-        private void SaveAtt(CurrentDocumentData currentDocument, byte[] newAttContent)
+        private void SaveAtt(ActionContextInfo context, byte[] newAttContent)
         {
+            var currentDocument = context.CurrentDocument;
             var sourceAttData = currentDocument.GetFieldValue(Configuration.AttConfig.AttTechnicalFieldID).ToString();
             var sourceAtt = currentDocument.Attachments.GetByID(Convert.ToInt32(sourceAttData));
             sourceAtt.Content = newAttContent;
@@ -56,7 +57,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Download
                 sourceAtt.FileGroup = new AttachmentsGroup(Configuration.AttConfig.SaveCategory, null);
             }
 
-            DocumentAttachmentsManager.UpdateAttachment(new UpdateAttachmentParams()
+            new DocumentAttachmentsManager(context).UpdateAttachment(new UpdateAttachmentParams()
             {
                 Attachment = sourceAtt
             });

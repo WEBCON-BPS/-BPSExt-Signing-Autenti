@@ -1,18 +1,18 @@
-﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup Label="MainConfig">
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3983E343-03B5-4215-8FC1-ED33ED850C9B}</ProjectGuid>
+    <ProjectGuid>{44c20d10-5e57-4019-9e54-c83b28415747}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WebCon.BpsExt.Signing.Autenti</RootNamespace>
     <AssemblyName>WebCon.BpsExt.Signing.Autenti</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetOfficeVersion>15.0</TargetOfficeVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>temporary_key.snk</AssemblyOriginatorKeyFile>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,42 +31,44 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WebCon.WorkFlow.SDK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c30f1f18c194ceba, processorArchitecture=MSIL">
-      <HintPath>..\packages\WEBCON.BPS.2020.SDK.Libraries.20.1.1.64\lib\WebCon.WorkFlow.SDK.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CustomActions\AutentiHelper.cs" />
-    <Compile Include="CustomActions\Download\DownloadSignDocAction.cs" />
-    <Compile Include="CustomActions\Download\DownloadSignDocActionConfig.cs" />
-    <Compile Include="CustomActions\Models\EnvelopeRequest.cs" />
-    <Compile Include="CustomActions\Models\StatusResponse.cs" />
-    <Compile Include="CustomActions\SendEnvelope\SendEnvelopeAction.cs" />
-    <Compile Include="CustomActions\SendEnvelope\SendEnvelopeActionConfig.cs" />
-    <Compile Include="CustomActions\Status\CheckDocStatusAction.cs" />
-    <Compile Include="CustomActions\Status\CheckDocStatusActionConfig.cs" />
+    <Compile Include="CustomActions\APIv01\Config\ApiConfiguration.cs" />
+    <Compile Include="CustomActions\APIv01\Download\DownloadSignDocAction.cs" />
+    <Compile Include="CustomActions\APIv01\Config\DownloadSignDocActionConfig.cs" />
+    <Compile Include="CustomActions\APIv01\Models\EnvelopeRequest.cs" />
+    <Compile Include="CustomActions\APIv01\Models\StatusResponse.cs" />
+    <Compile Include="CustomActions\APIv01\SendEnvelope\SendEnvelopeAction.cs" />
+    <Compile Include="CustomActions\APIv01\Config\SendEnvelopeActionConfig.cs" />
+    <Compile Include="CustomActions\APIv01\Status\CheckDocStatusAction.cs" />
+    <Compile Include="CustomActions\APIv01\Config\CheckDocStatusActionConfig.cs" />
+    <Compile Include="CustomActions\APIv2\Config\Authenticate.cs" />
+    <Compile Include="CustomActions\APIv2\Config\DownloadSignAttActionConfig.cs" />
+    <Compile Include="CustomActions\APIv2\Config\SendingDocumentActionConfig.cs" />
+    <Compile Include="CustomActions\APIv2\DownloadSignAttAction.cs" />
+    <Compile Include="CustomActions\APIv2\Models\Auth\RequestBody.cs" />
+    <Compile Include="CustomActions\APIv2\Models\Auth\ResponseBody.cs" />
+    <Compile Include="CustomActions\APIv2\Models\Document\ResponseBody.cs" />
+    <Compile Include="CustomActions\APIv2\SendingDocumentAction.cs" />
+    <Compile Include="CustomActions\Helpers\AutentiTokenProvider.cs" />
+    <Compile Include="CustomActions\Helpers\RequestBodyProvider.cs" />
+    <Compile Include="CustomActions\Helpers\V01Helper.cs" />
+    <Compile Include="CustomActions\Helpers\V2Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="temporary_key.snk" />
     <None Include="WebCon.BpsExt.Signing.Autenti.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="temporary_key.snk" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="WEBCON.BPS.2022.SDK.Libraries" Version="22.1.1.53" />
+  </ItemGroup>
 </Project>

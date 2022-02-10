@@ -1,7 +1,8 @@
-﻿using WebCon.WorkFlow.SDK.Common;
+﻿using WebCon.BpsExt.Signing.Autenti.CustomActions.APIv01.Config;
+using WebCon.WorkFlow.SDK.Common;
 using WebCon.WorkFlow.SDK.ConfigAttributes;
 
-namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Status
+namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Status
 {
     public class CheckDocStatusActionConfig : PluginConfiguration
     {
@@ -13,11 +14,5 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Status
 
         [ConfigEditableFormFieldID(DisplayName = "Copy Status to field", Description = "Specify a field on the form where current document status will be saved")]
         public int StatusFildId { get; set; }
-    }
-
-    public class ApiConfiguration
-    {
-        [ConfigEditableText(DisplayName = "Integration Key", IsRequired = true)]
-        public string TokenValue { get; set; }
-    }
+    }   
 }

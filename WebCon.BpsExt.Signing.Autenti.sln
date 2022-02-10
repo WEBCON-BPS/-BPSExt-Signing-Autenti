@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29728.190
+VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCon.BpsExt.Signing.Autenti", "WebCon.BpsExt.Signing.Autenti\WebCon.BpsExt.Signing.Autenti.csproj", "{3983E343-03B5-4215-8FC1-ED33ED850C9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCon.BpsExt.Signing.Autenti", "WebCon.BpsExt.Signing.Autenti\WebCon.BpsExt.Signing.Autenti.csproj", "{44C20D10-5E57-4019-9E54-C83B28415747}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3983E343-03B5-4215-8FC1-ED33ED850C9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3983E343-03B5-4215-8FC1-ED33ED850C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3983E343-03B5-4215-8FC1-ED33ED850C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3983E343-03B5-4215-8FC1-ED33ED850C9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C20D10-5E57-4019-9E54-C83B28415747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C20D10-5E57-4019-9E54-C83B28415747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C20D10-5E57-4019-9E54-C83B28415747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C20D10-5E57-4019-9E54-C83B28415747}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {82A5F90F-76A4-4DFD-BD15-F8A089308960}
+		SolutionGuid = {3197B5B2-9A9B-4440-9635-24E293ADB44B}
 	EndGlobalSection
 EndGlobal
