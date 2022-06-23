@@ -29,7 +29,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = client.SendAsync(request).Result;
             var result = response.Content.ReadAsStringAsync().Result;
-            _context.PluginLogger.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
 
             return JsonConvert.DeserializeObject<APIv2.Models.Auth.ResponseBody>(result).access_token;

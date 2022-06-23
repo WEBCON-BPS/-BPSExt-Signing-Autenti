@@ -43,7 +43,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = client.SendAsync(request).Result;
             var result = response.Content.ReadAsStringAsync().Result;
-            _context.PluginLogger.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
 
             return JsonConvert.DeserializeObject<APIv2.Models.Document.ResponseBody>(result).id;
@@ -64,7 +64,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = client.SendAsync(request).Result;
             var result = response.Content.ReadAsStringAsync().Result;
-            _context.PluginLogger.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
         }      
 
@@ -90,7 +90,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
                 var response = client.PostAsync($"{_connection.Url}/document-processes/{docGuid}/files", multiForm).Result;
                 var result = response.Content.ReadAsStringAsync().Result;
-                _context.PluginLogger.AppendDebug("Response: " + result);
+                _context.PluginLogger?.AppendDebug("Response: " + result);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -106,7 +106,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = client.SendAsync(request).Result;
             var result = response.Content.ReadAsStringAsync().Result;
-            _context.PluginLogger.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
         }       
 
@@ -120,7 +120,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = client.SendAsync(request).Result;
             var result = response.Content.ReadAsStringAsync().Result;
-            _context.PluginLogger.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
 
             var document = JsonConvert.DeserializeObject<APIv2.Models.Document.ResponseBody>(result);

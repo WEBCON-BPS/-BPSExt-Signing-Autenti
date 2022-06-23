@@ -38,7 +38,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope
             finally
             {
                 args.LogMessage = _log.ToString();
-                args.Context.PluginLogger.AppendInfo(_log.ToString());
+                args.Context.PluginLogger?.AppendInfo(_log.ToString());
             }
         }
 

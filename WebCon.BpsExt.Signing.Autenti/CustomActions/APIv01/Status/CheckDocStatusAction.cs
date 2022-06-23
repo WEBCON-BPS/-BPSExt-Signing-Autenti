@@ -28,7 +28,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Status
             finally
             {
                 args.LogMessage = log.ToString();
-                args.Context.PluginLogger.AppendInfo(log.ToString());
+                args.Context.PluginLogger?.AppendInfo(log.ToString());
             }
         }
     }
