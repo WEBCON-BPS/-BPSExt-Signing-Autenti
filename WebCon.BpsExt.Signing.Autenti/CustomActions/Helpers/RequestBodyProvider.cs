@@ -32,17 +32,17 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             body.title = configurationOfBody.Title;
             body.description = configurationOfBody.Description;
             body.processLanguage = "pl";
-            body.parties = AddParties(itemList, configurationOfBody.Users);
+            body.parties = AddParties(itemList, configurationOfBody);
 
             return JsonConvert.SerializeObject(body, Formatting.Indented);
         }
 
-        private static Party[] AddParties(ItemsList itemLis, UserColumns userData)
+        private static Party[] AddParties(ItemsList itemLis, Body configurationOfBody)
         {
             var parties = new List<Party>();          
             foreach (var row in itemLis.Rows)
             {
-                var userName = row.GetCellValue(userData.Name, EntityValueFormat.PairName).ToString();
+                var userName = row.GetCellValue(configurationOfBody.Users.Name, EntityValueFormat.PairName).ToString();
                 var item = new Party();
                 item.party = new Party1();
                 item.party.firstName = userName.Split(new string[] { " " }, StringSplitOptions.None).First();
@@ -55,25 +55,25 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
                         type = "CONTACT-TYPE:EMAIL",
                         attributes = new Attributes()
                         {
-                        email = row.GetCellValue(userData.Email)?.ToString()
+                        email = row.GetCellValue(configurationOfBody.Users.Email)?.ToString()
                         }
                     }
                 };
-                item.role = row.GetCellValue(userData.Role, EntityValueFormat.PairID)?.ToString();
+                item.role = row.GetCellValue(configurationOfBody.Users.Role, EntityValueFormat.PairID)?.ToString();
 
                 var constraints = new List<Constraint>();
                 constraints.Add(new Constraint()
                 {
                     classifiers = new string[] { "CONSTRAINT-UNIQUE_TYPE:SIGNATURE_TYPE" },
-                    attributes = new Attributes2() { requiredClassifiers = new string[] { "SIGNATURE_PROVIDER-SIGNATURE_TYPE:BASIC" } }
+                    attributes = new Attributes2() { requiredClassifiers = new string[] { $"SIGNATURE_PROVIDER-SIGNATURE_TYPE:{configurationOfBody.Type}" } }
                 });
-                if (!string.IsNullOrEmpty(row.Cells.GetByID(userData.PhoneNumber)?.GetValue()?.ToString()))
+                if (!string.IsNullOrEmpty(row.Cells.GetByID(configurationOfBody.Users.PhoneNumber)?.GetValue()?.ToString()))
                 {
                     constraints.Add(new Constraint()
                     {
                         constrainedActions = new string[] { "ACTION:SIGNATURE_APPLICATION" },
                         classifiers = new string[] { "CONSTRAINT-UNIQUE_TYPE:PHONE_NUMBER_VERIFICATION_REQUIRED" },
-                        attributes = new Attributes2() { phoneNumber = $"{row.GetCellValue(userData.PhoneNumber)}" }
+                        attributes = new Attributes2() { phoneNumber = $"{row.GetCellValue(configurationOfBody.Users.PhoneNumber)}" }
                     });
                 }
                 item.constraints = constraints.ToArray();

@@ -1,4 +1,5 @@
-﻿using WebCon.WorkFlow.SDK.Common;
+﻿using WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope;
+using WebCon.WorkFlow.SDK.Common;
 using WebCon.WorkFlow.SDK.ConfigAttributes;
 
 namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config
@@ -37,6 +38,9 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config
 
         [ConfigEditableItemList(DisplayName = "Users")]
         public UserColumns Users { get; set; }
+
+        [ConfigEditableEnum(DisplayName = "Signature Type", Description = "The type of electronic signature.", DefaultValue = 0)]
+        public SignatureType Type { get; set; }
     }
 
     public class AttConfig
@@ -61,5 +65,11 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config
         public int Role { get; set; }
 
         public int ItemListId { get; set; }
+    }
+
+    public enum SignatureType
+    {
+        BASIC,
+        QUALIFIED
     }
 }
