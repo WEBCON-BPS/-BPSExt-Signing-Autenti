@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers;
 using WebCon.WorkFlow.SDK.ActionPlugins;
 using WebCon.WorkFlow.SDK.ActionPlugins.Model;
@@ -17,19 +18,19 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope
     {
         StringBuilder _log = new StringBuilder();
 
-        public override void Run(RunCustomActionParams args)
-        {       
+        public override async Task RunAsync(RunCustomActionParams args)
+        {
             try
             {
-                var att = GetAttachment(args.Context);
+                var att = await GetAttachmentAsync(args.Context);
                 var users = PrepareUsersToSign(args.Context.CurrentDocument.ItemsLists.GetByID(Configuration.Users.SignersList.ItemListId));
                 var api = new V01Helper(Configuration.ApiConfig.Url, _log);
-                var docId = api.SendEnvelope(Configuration, users, att);
-                
+                var docId = await api.SendEnvelopeAsync(Configuration, users, att);
+
                 args.Context.CurrentDocument.SetFieldValue(Configuration.AttConfig.DokumentIdFild, docId);
                 args.Context.CurrentDocument.SetFieldValue(Configuration.AttConfig.AttTechnicalFieldID, att.ID);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 args.HasErrors = true;
                 args.Message = e.Message;
@@ -42,13 +43,13 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope
             }
         }
 
-        private AttachmentData GetAttachment(ActionContextInfo context)
+        private async Task<AttachmentData> GetAttachmentAsync(ActionContextInfo context)
         {
             if (Configuration.AttConfig.InputAttType == InputType.Category)
             {
                 _log.AppendLine("Downloading attachments by category");
 
-                var allAttachments = new DocumentAttachmentsManager(context).GetAttachments(new GetAttachmentsParams()
+                var allAttachments = await new DocumentAttachmentsManager(context).GetAttachmentsAsync(new GetAttachmentsParams()
                 {
                     DocumentId = context.CurrentDocument.ID,
                     IncludeContent = true
@@ -75,11 +76,11 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope
             {
                 _log.AppendLine("Downloading attachments by SQL query");
 
-                var attId = SqlExecutionHelper.ExecSqlCommandScalar(Configuration.AttConfig.AttQuery, context);
+                var attId = await new SqlExecutionHelper(context).ExecSqlCommandScalarAsync(Configuration.AttConfig.AttQuery);
                 if (attId == null)
                     throw new Exception("Sql query not returning result");
 
-                return new DocumentAttachmentsManager(context).GetAttachment(Convert.ToInt32(attId));
+                return await new DocumentAttachmentsManager(context).GetAttachmentAsync(Convert.ToInt32(attId));
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers;
 using WebCon.WorkFlow.SDK.ActionPlugins;
 using WebCon.WorkFlow.SDK.ActionPlugins.Model;
@@ -12,7 +13,8 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Download
     public class DownloadSignDocAction : CustomAction<DownloadSignDocActionConfig>
     {
         private const string SuccessStatus = "SUCCESS";
-        public override void Run(RunCustomActionParams args)
+
+        public override async Task RunAsync(RunCustomActionParams args)
         {
             var log = new StringBuilder();
             try
@@ -22,8 +24,8 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Download
                 {
                     var docId = args.Context.CurrentDocument.GetFieldValue(Configuration.DokFildId)?.ToString();
                     var api = new V01Helper(Configuration.ApiConfig.Url, log);
-                    var responseContent = api.GetDocument(Configuration.ApiConfig.TokenValue, docId);
-                    SaveAtt(args.Context, responseContent);
+                    var responseContent = await api.GetDocumentAsync(Configuration.ApiConfig.TokenValue, docId);
+                    await SaveAttAsync(args.Context, responseContent);
                 }
                 else
                 {
@@ -42,22 +44,22 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Download
                 args.LogMessage = log.ToString();
                 args.Context.PluginLogger?.AppendInfo(log.ToString());
             }
-        }
+        }        
 
-        private void SaveAtt(ActionContextInfo context, byte[] newAttContent)
+        private async Task SaveAttAsync(ActionContextInfo context, byte[] newAttContent)
         {
             var currentDocument = context.CurrentDocument;
             var sourceAttData = currentDocument.GetFieldValue(Configuration.AttConfig.AttTechnicalFieldID).ToString();
-            var sourceAtt = currentDocument.Attachments.GetByID(Convert.ToInt32(sourceAttData));
+            var sourceAtt = await currentDocument.Attachments.GetByIDAsync(Convert.ToInt32(sourceAttData));
             sourceAtt.Content = newAttContent;
             sourceAtt.FileName = $"{Path.GetFileNameWithoutExtension(sourceAtt.FileName)}{Configuration.AttConfig.AttSufix}{sourceAtt.FileExtension}";
 
             if (!string.IsNullOrEmpty(Configuration.AttConfig.SaveCategory))
             {
-                sourceAtt.FileGroup = new AttachmentsGroup(Configuration.AttConfig.SaveCategory, null);
+                await sourceAtt.SetFileGroupAsync(Configuration.AttConfig.SaveCategory);
             }
 
-            new DocumentAttachmentsManager(context).UpdateAttachment(new UpdateAttachmentParams()
+            await new DocumentAttachmentsManager(context).UpdateAttachmentAsync(new UpdateAttachmentParams()
             {
                 Attachment = sourceAtt
             });

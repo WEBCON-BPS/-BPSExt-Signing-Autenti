@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using WebCon.WorkFlow.SDK.ActionPlugins.Model;
 using WebCon.WorkFlow.SDK.Tools.Data.Model;
 
@@ -15,7 +16,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             _context = context;
         }
 
-        internal string GetAuthToken(WebServiceConnection _connection, string grant, string scope)
+        internal async Task<string> GetAuthTokenAsync(WebServiceConnection _connection, string grant, string scope)
         {
             var json = RequestBodyProvider.CreateAuthBody(_connection, grant, scope);
 
@@ -27,8 +28,8 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
 
-            var response = client.SendAsync(request).Result;
-            var result = response.Content.ReadAsStringAsync().Result;
+            var response = await client.SendAsync(request);
+            var result = await response.Content.ReadAsStringAsync();
             _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
 
