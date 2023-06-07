@@ -40,7 +40,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Download
             finally
             {
                 args.LogMessage = log.ToString();
-                args.Context.PluginLogger.AppendInfo(log.ToString());
+                args.Context.PluginLogger?.AppendInfo(log.ToString());
             }
         }
 

@@ -37,6 +37,9 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config
 
         [ConfigEditableItemList(DisplayName = "Users")]
         public UserColumns Users { get; set; }
+
+        [ConfigEditableBool(DisplayName = "Participation priority", Description = "Required if the role 'Approver' is assigned")]
+        public bool SetUserPriority { get; set; }
     }
 
     public class AttConfig
@@ -48,17 +51,26 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config
 
     public class UserColumns : IConfigEditableItemList
     {
-        [ConfigEditableItemListColumnID(DisplayName = "Name")]
+        [ConfigEditableItemListColumnID(DisplayName = "Name", IsRequired = true)]
         public int Name { get; set; }
 
-        [ConfigEditableItemListColumnID(DisplayName = "Email")]
-        public int Email { get; set; }
+        [ConfigEditableItemListColumnID(DisplayName = "Email", IsRequired = true)]
+        public int Email { get; set; }       
+
+        [ConfigEditableItemListColumnID(DisplayName = "Role", Description = "Name of role", IsRequired = true)]
+        public int Role { get; set; }
+
+        [ConfigEditableItemListColumnID(DisplayName = "Signature Type", Description = "The type of electronic signature. ID of signature type", IsRequired = true)]
+        public int SigType { get; set; }
 
         [ConfigEditableItemListColumnID(DisplayName = "PhoneNumber")]
         public int PhoneNumber { get; set; }
 
-        [ConfigEditableItemListColumnID(DisplayName = "Role")]
-        public int Role { get; set; }
+        [ConfigEditableItemListColumnID(DisplayName = "SMS authentication", Description = "SMS code authentication of the recipient")]
+        public int? SmsAuthentication { get; set; }
+
+        [ConfigEditableItemListColumnID(DisplayName = "Unlock document by SMS", Description = "Document access security by SMS code")]
+        public int? SmsAccess { get; set; }
 
         public int ItemListId { get; set; }
     }
