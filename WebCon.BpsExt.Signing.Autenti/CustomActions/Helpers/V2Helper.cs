@@ -46,7 +46,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<APIv2.Models.Document.ResponseBody>(result).id;
+            return JsonConvert.DeserializeObject<APIv2.Models.Document.ResponseBody>(result)?.id;
         }
 
         internal void ModyfiDocument(Body requestBody, string docGuid)

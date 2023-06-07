@@ -22,7 +22,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_connection.Url}/auth/token")
+            var request = new HttpRequestMessage(HttpMethod.Post, _connection.AuthorizationServiceUrl)
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
@@ -32,7 +32,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             _context.PluginLogger?.AppendDebug("Response: " + result);
             response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<APIv2.Models.Auth.ResponseBody>(result).access_token;
+            return JsonConvert.DeserializeObject<APIv2.Models.Auth.ResponseBody>(result)?.access_token;
         }
     }
 }

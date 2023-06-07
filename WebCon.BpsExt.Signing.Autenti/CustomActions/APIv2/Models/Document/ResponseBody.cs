@@ -92,8 +92,10 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Models.Document
 
     public class Attributes2
     {
+        public int priority { get; set; }
         public string[] requiredClassifiers { get; set; }
         public string phoneNumber { get; set; }
+
     }
 
     public class Event
