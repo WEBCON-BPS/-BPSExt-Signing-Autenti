@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope;
 using WebCon.WorkFlow.SDK.ActionPlugins.Model;
 using WebCon.WorkFlow.SDK.Documents.Model.Attachments;
@@ -27,7 +28,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             _configUrl = autentiUrl ?? BaseTestUrl;
         }
 
-        public string SendEnvelope(SendEnvelopeActionConfig config, List<APIv1.Models.Signer> signers, AttachmentData att)
+        public async Task<string> SendEnvelopeAsync(SendEnvelopeActionConfig config, List<APIv1.Models.Signer> signers, AttachmentData att)
         {
             var json = new APIv1.Models.EnvelopeRequest();
             json.title = config.MessageContent.Title;
@@ -46,20 +47,20 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
                             }), Encoding.UTF8, "application/json")               
             };
 
-            var response = client.SendAsync(request).Result;
+            var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             _log.AppendLine("Response: " + result);
 
             var docId = JsonConvert.DeserializeObject<APIv1.Models.EnvelopeResponse>(result).documentId;
 
-            AddDocument(config.ApiConfig.TokenValue, docId, att.Content, att.FileName);
-            StartProcess(config.ApiConfig.TokenValue, docId);
+            await AddDocumentAsync(config.ApiConfig.TokenValue, docId, att.Content, att.FileName);
+            await StartProcessAsync(config.ApiConfig.TokenValue, docId);
 
             return docId;
         }
 
-        internal byte[] GetDocument(string token, string docId)
+        internal async Task<byte[]> GetDocumentAsync(string token, string docId)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/pdf, application/json");
@@ -67,12 +68,12 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_configUrl}/documents/{docId}/signed");
 
-            var response = client.SendAsync(request).Result;
+            var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            return response.Content.ReadAsByteArrayAsync().Result;            
+            return await response.Content.ReadAsByteArrayAsync();            
         }
 
-        public void AddDocument(string token, string docId, byte[] content, string filename)
+        public async Task AddDocumentAsync(string token, string docId, byte[] content, string filename)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");           
@@ -84,11 +85,11 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             multiForm.Add(imageContent, "files", filename);
 
-            var response = client.PostAsync($"{_configUrl}/documents/{docId}/files", multiForm).Result;
+            var response = await client.PostAsync($"{_configUrl}/documents/{docId}/files", multiForm);
             response.EnsureSuccessStatusCode();           
         }
 
-        public void StartProcess(string token, string docId)
+        public async Task StartProcessAsync(string token, string docId)
         {
             var json = new APIv1.Models.EnvelopeResponse();
             json.documentId = docId; 
@@ -104,11 +105,11 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
                             }), Encoding.UTF8, "application/json")
             };
 
-            var response = client.SendAsync(request).Result;
+            var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();           
         }
 
-        public string GetDocumentStatus(string token, string docId)
+        public async Task<string> GetDocumentStatusAsync(string token, string docId)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -116,9 +117,9 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_configUrl}/signing-process/{docId}");
 
-            var response = client.SendAsync(request).Result;
+            var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             _log.AppendLine("Response:").AppendLine(result);
 
             return JsonConvert.DeserializeObject<APIv1.Models.StatusResponse>(result).status;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config;
 using WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers;
 using WebCon.WorkFlow.SDK.ActionPlugins;
@@ -8,12 +9,13 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2
 {
     public class DownloadSignAttAction : CustomAction<DownloadSignAttActionConfig>
     {
-        public override void Run(RunCustomActionParams args)
+        public override async Task RunAsync(RunCustomActionParams args)
         {
             try
             {
                 var docGuid = args.Context.CurrentDocument.GetFieldValue(Configuration.DocTechnicalFieldID).ToString();
-                new V2Helper(args.Context, Configuration.Auth).GetFileAndSaveStatus(docGuid, Configuration.SaveCategory, Configuration.StatusFildId);                           
+                var apiHelper = await V2Helper.CreateAsync(args.Context, Configuration.Auth);
+                await apiHelper.GetFileAndSaveStatusAsync(docGuid, Configuration.SaveCategory, Configuration.StatusFildId);
             }
             catch (Exception e)
             {
@@ -22,6 +24,6 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2
                 args.LogMessage = e.ToString();
                 args.Context.PluginLogger?.AppendInfo(e.ToString());
             }
-        }       
+        }           
     }
 }
