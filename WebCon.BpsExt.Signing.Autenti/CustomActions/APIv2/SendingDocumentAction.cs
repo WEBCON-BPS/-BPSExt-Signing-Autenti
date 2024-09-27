@@ -18,7 +18,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2
                 await autenti.ModyfiDocumentAsync(Configuration.RequestBody, docGuid);
                 await autenti.AddFileAsync(args.Context, Configuration.AttConfig.AttQuery, docGuid);
                 await autenti.SendToSignAsync(Configuration.ASSERTION, docGuid);
-                args.Context.CurrentDocument.SetFieldValue(Configuration.DokumentIdFild, docGuid);
+                await args.Context.CurrentDocument.SetFieldValueAsync(Configuration.DokumentIdFild, docGuid);
             }
             catch (Exception e)
             {

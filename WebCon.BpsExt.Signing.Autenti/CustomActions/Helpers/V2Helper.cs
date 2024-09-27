@@ -51,7 +51,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = await client.SendAsync(request);
             var result = await response.Content.ReadAsStringAsync();
-            _context.PluginLogger?.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("CreateDocumentAsync Response: " + result);
             response.EnsureSuccessStatusCode();
 
             return JsonConvert.DeserializeObject<APIv2.Models.Document.ResponseBody>(result)?.id;
@@ -64,15 +64,17 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", Accept);
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_token}");
+            var content = RequestBodyProvider.CreateDocumentBody(userList, requestBody);
 
             var request = new HttpRequestMessage(HttpMethod.Put, $"{_apiUrl}/document-processes/{docGuid}")
             {
-                Content = new StringContent(RequestBodyProvider.CreateDocumentBody(userList, requestBody), Encoding.UTF8, "application/json")
+                Content = new StringContent(content, Encoding.UTF8, "application/json")
             };
 
+            _context.PluginLogger?.AppendDebug("ModyfiDocumentAsync Request body: " + content);
             var response = await client.SendAsync(request);
             var result = await response.Content.ReadAsStringAsync();
-            _context.PluginLogger?.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("ModyfiDocumentAsync Response: " + result);
             response.EnsureSuccessStatusCode();
         }      
 
@@ -89,8 +91,8 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             foreach (System.Data.DataRow row in dt.Rows)
             {
                 var att = await new DocumentAttachmentsManager(context).GetAttachmentAsync(Convert.ToInt32(row[0]));
-
-                var imageContent = new ByteArrayContent(att.Content);
+                var content = await att.GetContentAsync();
+                var imageContent = new ByteArrayContent(content);
                 imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
 
                 var multiForm = new MultipartFormDataContent();
@@ -98,7 +100,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
                 var response = await client.PostAsync($"{_apiUrl}/document-processes/{docGuid}/files", multiForm);
                 var result = response.Content.ReadAsStringAsync();
-                _context.PluginLogger?.AppendDebug("Response: " + result);
+                _context.PluginLogger?.AppendDebug("AddFileAsync Response: " + result);
                 response.EnsureSuccessStatusCode();
             }
         }
@@ -114,7 +116,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = await client.SendAsync(request);
             var result = await response.Content.ReadAsStringAsync();
-            _context.PluginLogger?.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("SendToSignAsync Response: " + result);
             response.EnsureSuccessStatusCode();
         }       
 
@@ -128,7 +130,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
 
             var response = await client.SendAsync(request);
             var result = await response.Content.ReadAsStringAsync();
-            _context.PluginLogger?.AppendDebug("Response: " + result);
+            _context.PluginLogger?.AppendDebug("GetFileAndSaveStatusAsync Response: " + result);
             response.EnsureSuccessStatusCode();
 
             var document = JsonConvert.DeserializeObject<APIv2.Models.Document.ResponseBody>(result);
@@ -154,12 +156,12 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
                 }
             }
 
-            _context.CurrentDocument.SetFieldValue(statusFieldId, document.status);        
+            await _context.CurrentDocument.SetFieldValueAsync(statusFieldId, document.status);        
         }
 
         private async Task AddAttToDocAsync(string fileName, byte[] content, string category)
         {
-            var newAtt = new DocumentAttachmentsManager(_context).GetNewAttachment(fileName, content);
+            var newAtt = await new DocumentAttachmentsManager(_context).GetNewAttachmentAsync(fileName, content);
             if (!string.IsNullOrEmpty(category))
                 await SetFileGroup(newAtt, category);
             

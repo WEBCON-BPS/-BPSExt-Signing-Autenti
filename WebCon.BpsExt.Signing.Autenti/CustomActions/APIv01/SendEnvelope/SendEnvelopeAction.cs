@@ -27,8 +27,8 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.SendEnvelope
                 var api = new V01Helper(Configuration.ApiConfig.Url, _log);
                 var docId = await api.SendEnvelopeAsync(Configuration, users, att);
 
-                args.Context.CurrentDocument.SetFieldValue(Configuration.AttConfig.DokumentIdFild, docId);
-                args.Context.CurrentDocument.SetFieldValue(Configuration.AttConfig.AttTechnicalFieldID, att.ID);
+                await args.Context.CurrentDocument.SetFieldValueAsync(Configuration.AttConfig.DokumentIdFild, docId);
+                await args.Context.CurrentDocument.SetFieldValueAsync(Configuration.AttConfig.AttTechnicalFieldID, att.ID);
             }
             catch (Exception e)
             {

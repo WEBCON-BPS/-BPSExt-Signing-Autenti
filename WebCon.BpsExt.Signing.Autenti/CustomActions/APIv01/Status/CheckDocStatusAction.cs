@@ -17,7 +17,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Status
                 var docId = args.Context.CurrentDocument.GetFieldValue(Configuration.DokFildId)?.ToString();
                 var status = await new V01Helper(Configuration.ApiConfig.Url, log).GetDocumentStatusAsync(Configuration.ApiConfig.TokenValue, docId);
 
-                args.Context.CurrentDocument.SetFieldValue(Configuration.StatusFildId, status);
+                await args.Context.CurrentDocument.SetFieldValueAsync(Configuration.StatusFildId, status);
             }
             catch (Exception e)
             {
