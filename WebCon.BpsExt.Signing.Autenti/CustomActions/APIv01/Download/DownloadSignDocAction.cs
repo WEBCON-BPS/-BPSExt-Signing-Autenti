@@ -51,7 +51,7 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv1.Download
             var currentDocument = context.CurrentDocument;
             var sourceAttData = currentDocument.GetFieldValue(Configuration.AttConfig.AttTechnicalFieldID).ToString();
             var sourceAtt = await currentDocument.Attachments.GetByIDAsync(Convert.ToInt32(sourceAttData));
-            sourceAtt.Content = newAttContent;
+            sourceAtt.SetContent(newAttContent);
             sourceAtt.FileName = $"{Path.GetFileNameWithoutExtension(sourceAtt.FileName)}{Configuration.AttConfig.AttSufix}{sourceAtt.FileExtension}";
 
             if (!string.IsNullOrEmpty(Configuration.AttConfig.SaveCategory))

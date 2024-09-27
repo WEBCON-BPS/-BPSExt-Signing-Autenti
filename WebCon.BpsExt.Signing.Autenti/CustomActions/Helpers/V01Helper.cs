@@ -47,14 +47,15 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
                             }), Encoding.UTF8, "application/json")               
             };
 
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            var response = await client.SendAsync(request);          
             var result = await response.Content.ReadAsStringAsync();
             _log.AppendLine("Response: " + result);
+            response.EnsureSuccessStatusCode();
 
             var docId = JsonConvert.DeserializeObject<APIv1.Models.EnvelopeResponse>(result).documentId;
 
-            await AddDocumentAsync(config.ApiConfig.TokenValue, docId, att.Content, att.FileName);
+            var attConent = await att.GetContentAsync();
+            await AddDocumentAsync(config.ApiConfig.TokenValue, docId, attConent, att.FileName);
             await StartProcessAsync(config.ApiConfig.TokenValue, docId);
 
             return docId;

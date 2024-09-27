@@ -66,10 +66,10 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config
         [ConfigEditableItemListColumnID(DisplayName = "PhoneNumber")]
         public int PhoneNumber { get; set; }
 
-        [ConfigEditableItemListColumnID(DisplayName = "SMS authentication", Description = "SMS code authentication of the recipient")]
+        [ConfigEditableItemListColumnID(DisplayName = "SMS authentication", Description = "SMS code authentication of the recipient", ItemListColumnTypes = ItemListColumnTypes.Boolean)]
         public int? SmsAuthentication { get; set; }
 
-        [ConfigEditableItemListColumnID(DisplayName = "Unlock document by SMS", Description = "Document access security by SMS code")]
+        [ConfigEditableItemListColumnID(DisplayName = "Unlock document by SMS", Description = "Document access security by SMS code", ItemListColumnTypes = ItemListColumnTypes.Boolean)]
         public int? SmsAccess { get; set; }
 
         public int ItemListId { get; set; }
