@@ -16,11 +16,11 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             _context = context;
         }
 
-        internal async Task<string> GetAuthTokenAsync(WebServiceConnection _connection, string grant, string scope)
+        internal async Task<string> GetAuthTokenAsync(WebServiceConnection _connection, string grant, string scope, bool useProxy)
         {
             var json = RequestBodyProvider.CreateAuthBody(_connection, grant, scope);
 
-            var client = new HttpClient();
+            var client = new HttpClient(HttpClientHandlerProvider.GetClientHandler(_connection.AuthorizationServiceUrl, useProxy, _context));
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var request = new HttpRequestMessage(HttpMethod.Post, _connection.AuthorizationServiceUrl)

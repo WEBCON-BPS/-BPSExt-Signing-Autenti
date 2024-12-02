@@ -12,5 +12,8 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.APIv2.Config
 
         [ConfigEditableText(DisplayName = "scope", DefaultText = "full")]
         public string Scope { get; set; }
+
+        [ConfigEditableBool("Use proxy")]
+        public bool UseProxy { get; set; }
     }
 }

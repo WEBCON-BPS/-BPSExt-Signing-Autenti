@@ -37,26 +37,18 @@
     <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CustomActions\APIv01\Config\ApiConfiguration.cs" />
-    <Compile Include="CustomActions\APIv01\Download\DownloadSignDocAction.cs" />
-    <Compile Include="CustomActions\APIv01\Config\DownloadSignDocActionConfig.cs" />
-    <Compile Include="CustomActions\APIv01\Models\EnvelopeRequest.cs" />
-    <Compile Include="CustomActions\APIv01\Models\StatusResponse.cs" />
-    <Compile Include="CustomActions\APIv01\SendEnvelope\SendEnvelopeAction.cs" />
-    <Compile Include="CustomActions\APIv01\Config\SendEnvelopeActionConfig.cs" />
-    <Compile Include="CustomActions\APIv01\Status\CheckDocStatusAction.cs" />
-    <Compile Include="CustomActions\APIv01\Config\CheckDocStatusActionConfig.cs" />
     <Compile Include="CustomActions\APIv2\Config\Authenticate.cs" />
     <Compile Include="CustomActions\APIv2\Config\DownloadSignAttActionConfig.cs" />
     <Compile Include="CustomActions\APIv2\Config\SendingDocumentActionConfig.cs" />
+    <Compile Include="CustomActions\APIv2\Config\SignType.cs" />
     <Compile Include="CustomActions\APIv2\DownloadSignAttAction.cs" />
     <Compile Include="CustomActions\APIv2\Models\Auth\RequestBody.cs" />
     <Compile Include="CustomActions\APIv2\Models\Auth\ResponseBody.cs" />
     <Compile Include="CustomActions\APIv2\Models\Document\ResponseBody.cs" />
     <Compile Include="CustomActions\APIv2\SendingDocumentAction.cs" />
     <Compile Include="CustomActions\Helpers\AutentiTokenProvider.cs" />
+    <Compile Include="CustomActions\Helpers\HttpClientHandlerProvider.cs" />
     <Compile Include="CustomActions\Helpers\RequestBodyProvider.cs" />
-    <Compile Include="CustomActions\Helpers\V01Helper.cs" />
     <Compile Include="CustomActions\Helpers\V2Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,6 +61,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="WEBCON.BPS.2024.SDK.Libraries" Version="24.1.1.25" />
+    <PackageReference Include="WEBCON.BPS.2025.SDK.Libraries" Version="25.1.1.15" />
   </ItemGroup>
 </Project>

@@ -69,10 +69,10 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
                 var constraints = new List<Constraint>();
                 if (item.role == SignerRole)
                 {
-                    var signType = (APIv1.SendEnvelope.SignType)Convert.ToInt32(row.GetCellValue(userData.SigType, EntityValueFormat.PairID));
+                    var signType = (SignType)Convert.ToInt32(row.GetCellValue(userData.SigType, EntityValueFormat.PairID));
                     AddSignTypeConstraints(constraints, signType);
                     
-                    if(signType == APIv1.SendEnvelope.SignType.ESIGNATURE)
+                    if(signType == SignType.ESIGNATURE)
                         AddSmsAuthenticationnConstraints(constraints, row, userData);
                 }
                 AddSmsAccessConstraints(constraints, row, userData);
@@ -97,12 +97,12 @@ namespace WebCon.BpsExt.Signing.Autenti.CustomActions.Helpers
             });
         }
 
-        private static void AddSignTypeConstraints(List<Constraint> constraints, APIv1.SendEnvelope.SignType signType)
+        private static void AddSignTypeConstraints(List<Constraint> constraints, SignType signType)
         {
             constraints.Add(new Constraint()
             {
                 classifiers = new string[] { "CONSTRAINT-UNIQUE_TYPE:SIGNATURE_TYPE" },
-                attributes = new Attributes2() { requiredClassifiers = new string[] { $"SIGNATURE_PROVIDER-SIGNATURE_TYPE:{(signType == APIv1.SendEnvelope.SignType.ESIGNATURE ? Basic : Qualified)}" } }
+                attributes = new Attributes2() { requiredClassifiers = new string[] { $"SIGNATURE_PROVIDER-SIGNATURE_TYPE:{(signType == SignType.ESIGNATURE ? Basic : Qualified)}" } }
             });
         }
 
